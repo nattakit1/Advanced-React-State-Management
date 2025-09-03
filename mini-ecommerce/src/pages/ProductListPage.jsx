@@ -1,45 +1,68 @@
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import ProductCard from "../components/ProductCard";
+import { addItem } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 function ProductListPage() {
-  const products = [
-    { id: 1, name: "Laptop" },
-    { id: 2, name: "Smartphone" },
-    { id: 3, name: "Headphones" },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ ต้องอยู่ภายใน function component
+
+  // useCallback สำหรับเพิ่มสินค้า
+  const handleAddToCart = useCallback(
+    (product) => {
+      dispatch(
+        addItem({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+        })
+      );
+
+      // ถ้าต้องการไปหน้า cart หลังเพิ่มสินค้า
+      navigate("/cart");
+    },
+    [dispatch, navigate]
+  );
+
+  // Fetch products จาก API
   useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      // ✅ TODO 2: ดึงข้อมูลสินค้าจาก API
-      const res = await axios.get('https://fakestoreapi.com/products');
-      setProducts(res.data);
-    } catch (err) {
-      setError('Failed to fetch products.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchProducts();
-}, []);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("https://fakestoreapi.com/products");
+        setProducts(res.data);
+      } catch (err) {
+        setError("Failed to fetch products.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">รายการสินค้า</h1>
-      <ul className="space-y-2">
-        {products.map((p) => (
-          <li key={p.id}>
-            <Link
-              to={`/products/${p.id}`}
-              className="text-blue-600 hover:underline"
-            >
-              {p.name}
-            </Link>
-          </li>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={() => handleAddToCart(product)}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

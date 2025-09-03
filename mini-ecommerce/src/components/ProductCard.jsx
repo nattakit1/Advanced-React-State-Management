@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import React, { memo } from 'react';
 
-function ProductCard({ product }) {
+function ProductCard({ product, onAddToCart }) {
   return (
     <div className="border rounded-lg shadow p-4 flex flex-col bg-white">
       {/* รูปสินค้า */}
@@ -25,7 +26,7 @@ function ProductCard({ product }) {
       {/* ปุ่ม Add to Cart */}
       <button
         className="mt-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        onClick={() => alert(`เพิ่ม ${product.title} ไปที่ตะกร้าแล้ว!`)}
+        onClick={onAddToCart} // รับ callback จาก parent
       >
         Add to Cart
       </button>
@@ -33,4 +34,5 @@ function ProductCard({ product }) {
   );
 }
 
-export default ProductCard;
+// ห่อด้วย React.memo เพื่อป้องกัน re-render ถ้า props ไม่เปลี่ยน
+export default memo(ProductCard);

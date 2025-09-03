@@ -1,13 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
-import './index.css' // ✅ tailwind directives อยู่ในไฟล์นี้
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { HashRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+import "./index.css";
+import "./App.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-)
+    <Provider store={store}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </Provider>
+  </React.StrictMode>
+);
