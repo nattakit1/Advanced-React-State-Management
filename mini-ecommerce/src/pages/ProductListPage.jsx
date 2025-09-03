@@ -3,10 +3,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import { addItem } from "../features/cart/cartSlice";
-
 import { useNavigate } from "react-router-dom";
-
-const navigate = useNavigate();
 
 function ProductListPage() {
   const [products, setProducts] = useState([]);
@@ -14,8 +11,9 @@ function ProductListPage() {
   const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ ต้องอยู่ภายใน function component
 
-  // ✅ useCallback สำหรับเพิ่มสินค้า
+  // useCallback สำหรับเพิ่มสินค้า
   const handleAddToCart = useCallback(
     (product) => {
       dispatch(
@@ -26,11 +24,14 @@ function ProductListPage() {
           image: product.image,
         })
       );
+
+      // ถ้าต้องการไปหน้า cart หลังเพิ่มสินค้า
+      navigate("/cart");
     },
     [dispatch, navigate]
   );
 
-  // ✅ Fetch products จาก API
+  // Fetch products จาก API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
