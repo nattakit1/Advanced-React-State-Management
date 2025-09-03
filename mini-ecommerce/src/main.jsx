@@ -1,11 +1,12 @@
+// main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { HashRouter } from "react-router-dom"; // <-- เปลี่ยนจาก BrowserRouter
+import { HashRouter } from "react-router-dom"; // <-- ใช้ HashRouter
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
-// import CSS
+// CSS
 import "./index.css";
 import "./App.css";
 
